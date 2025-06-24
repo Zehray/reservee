@@ -1,0 +1,7 @@
+// Main SCSS file - imports all partials
+@use "sass:color";
+@import "variables";
+@import "reset";
+@import "layout";
+@import "components";
+@import "pages";

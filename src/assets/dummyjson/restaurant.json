@@ -1,0 +1,44 @@
+[
+  {
+    "id": "rest_1",
+    "name": "Beyti Restaurant",
+    "city": "İstanbul",
+    "district": "Bakırköy",
+    "image": "https://via.placeholder.com/300x200?text=Beyti+Restaurant"
+  },
+  {
+    "id": "rest_2",
+    "name": "Nusr-Et Steakhouse",
+    "city": "İstanbul",
+    "district": "Beşiktaş",
+    "image": "https://via.placeholder.com/300x200?text=Nusr-Et"
+  },
+  {
+    "id": "rest_3",
+    "name": "Kordon Balık",
+    "city": "İzmir",
+    "district": "Konak",
+    "image": "https://via.placeholder.com/300x200?text=Kordon+Balık"
+  },
+  {
+    "id": "rest_4",
+    "name": "Ankara Sofrası",
+    "city": "Ankara",
+    "district": "Çankaya",
+    "image": "https://via.placeholder.com/300x200?text=Ankara+Sofrası"
+  },
+  {
+    "id": "rest_5",
+    "name": "Meşhur Adana Kebap",
+    "city": "İstanbul",
+    "district": "Kadıköy",
+    "image": "https://via.placeholder.com/300x200?text=Adana+Kebap"
+  },
+  {
+    "id": "rest_6",
+    "name": "Tarihi Sultanahmet Köftecisi",
+    "city": "İstanbul",
+    "district": "Fatih",
+    "image": "https://via.placeholder.com/300x200?text=Sultanahmet+Köftecisi"
+  }
+]

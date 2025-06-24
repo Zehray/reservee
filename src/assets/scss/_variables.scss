@@ -1,0 +1,56 @@
+// Variables
+// Colors - Warm café theme
+$primary-color: #8b4513; // Coffee brown
+$secondary-color: #cd853f; // Sandy brown
+$accent-color: #d2691e; // Chocolate
+$background-color: #f5e6d3; // Beige
+$light-background: #faf0e6; // Linen
+$text-dark: #2f1b14; // Dark brown
+$text-light: #8b4513; // Coffee brown
+$white: #ffffff;
+$success-color: #228b22; // Forest green
+$error-color: #dc143c; // Crimson
+$warning-color: #ff8c00; // Dark orange
+
+// Typography
+$font-family-primary: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 1.875rem;
+$font-size-4xl: 2.25rem;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-2xl: 3rem;
+$spacing-3xl: 4rem;
+
+// Border radius
+$border-radius-sm: 0.25rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 1rem;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(47, 27, 20, 0.1);
+$shadow-md: 0 4px 6px rgba(47, 27, 20, 0.1);
+$shadow-lg: 0 10px 15px rgba(47, 27, 20, 0.1);
+$shadow-xl: 0 20px 25px rgba(47, 27, 20, 0.15);
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
