@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReserVee - Admin Dashboard</title>
+    <link rel="stylesheet" href="/reservee/assets/index-All4ik78.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <h2>ReserVee</h2>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="reservation.html" class="nav-link">Reservations</a></li>
+          <li><a href="admin.html" class="nav-link active">Admin</a></li>
+          <li><a href="tools.html" class="nav-link">Tools</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="admin-page">
+      <div class="container">
+        <section class="admin-header">
+          <h1>Admin Dashboard</h1>
+          <div class="admin-controls">
+            <div class="filter-group">
+              <label for="dateFilter">Filter by Date:</label>
+              <input type="date" id="dateFilter" />
+            </div>
+            <div class="sort-group">
+              <label for="sortBy">Sort by:</label>
+              <select id="sortBy">
+                <option value="date">Date</option>
+                <option value="name">Name</option>
+                <option value="guests">Guests</option>
+                <option value="time">Time</option>
+              </select>
+            </div>
+            <button id="clearAllData" class="danger-button">
+              Clear All Data
+            </button>
+          </div>
+        </section>
+
+        <section class="reservations-table-section">
+          <div class="table-header">
+            <h2>All Reservations</h2>
+            <div class="table-stats">
+              <span id="totalReservations">Total: 0</span>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table id="reservationsTable" class="reservations-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Guests</th>
+                  <th>Special Requests</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="reservationsTableBody">
+                <!-- Reservations will be populated here -->
+              </tbody>
+            </table>
+
+            <div id="noReservations" class="no-data">
+              <div class="no-data-icon">📋</div>
+              <h3>No Reservations Found</h3>
+              <p>No reservations have been made yet.</p>
+              <a href="reservation.html" class="cta-button"
+                >Make First Reservation</a
+              >
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2024 ReserVee Café. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/reservee/assets/index-oqU-VQ2N.js"></script>
+  </body>
+</html>
