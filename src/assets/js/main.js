@@ -1,7 +1,5 @@
-// Main JavaScript file for shared functionality
 import "./utils.js";
 
-// Set active navigation link based on current page
 document.addEventListener("DOMContentLoaded", () => {
   const currentPage = window.location.pathname.split("/").pop() || "index.html";
   const navLinks = document.querySelectorAll(".nav-link");
@@ -14,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Smooth scrolling for internal links
 document.addEventListener("click", (e) => {
   if (
     e.target.tagName === "A" &&
@@ -33,7 +30,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// Add loading states to buttons
 document.addEventListener("submit", (e) => {
   const submitButton = e.target.querySelector('button[type="submit"]');
   if (submitButton) {
@@ -41,7 +37,6 @@ document.addEventListener("submit", (e) => {
     submitButton.textContent = "Processing...";
     submitButton.disabled = true;
 
-    // Reset button after a delay (for demo purposes)
     setTimeout(() => {
       submitButton.textContent = originalText;
       submitButton.disabled = false;

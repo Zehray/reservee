@@ -1,6 +1,3 @@
-// Utility functions for the ReserVee application
-
-// Storage utilities
 export const storage = {
   get(key) {
     try {
@@ -50,18 +47,15 @@ export function isValidEmail(email) {
 }
 
 export function isValidPhone(phone) {
-  // Turkish phone number format: +90 XXX XXX XX XX or similar variations
   const phoneRegex = /^(\+90|0)?[5][0-9]{9}$/;
   const cleanPhone = phone.replace(/[\s\-\(\)]/g, "");
   return phoneRegex.test(cleanPhone);
 }
 
-// ID generation utility
 export function generateId() {
   return "id_" + Date.now() + "_" + Math.random().toString(36).substring(2, 11);
 }
 
-// Date formatting utilities
 export function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("tr-TR", {
@@ -83,7 +77,6 @@ export function formatTime(timeString) {
   });
 }
 
-// Currency formatting utility
 export function formatCurrency(amount) {
   return new Intl.NumberFormat("tr-TR", {
     style: "currency",
@@ -92,7 +85,6 @@ export function formatCurrency(amount) {
   }).format(amount);
 }
 
-// Debounce utility for performance optimization
 export function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
