@@ -13,20 +13,76 @@ async function initApp() {
 
 async function loadData() {
   try {
-    const [districtsRes, restaurantsRes] = await Promise.all([
-      fetch("src/assets/dummyjson/iller_ilceler.json"),
-      fetch("src/assets/dummyjson/restaurant.json"),
-    ]);
-
-    if (!districtsRes.ok || !restaurantsRes.ok) {
-      throw new Error("Veri yüklenemedi");
-    }
-
-    districtsData = await districtsRes.json();
-    restaurantData = await restaurantsRes.json();
+    // Önce backend'den deneyelim
+    await loadFromBackend();
   } catch (error) {
-    console.error("Hata:", error);
+    console.error("Backend failed, trying local files:", error);
+
+    try {
+      const [districtsRes, restaurantsRes] = await Promise.all([
+        fetch("/iller_ilceler.json"),
+        fetch("src/assets/dummyjson/restaurant.json"),
+      ]);
+
+      if (!districtsRes.ok || !restaurantsRes.ok) {
+        throw new Error("Veri yüklenemedi");
+      }
+
+      districtsData = await districtsRes.json();
+      restaurantData = await restaurantsRes.json();
+      console.log("✅ Loaded from local files");
+    } catch (localError) {
+      console.error("Local files failed:", localError);
+      useHardcodedData();
+    }
   }
+}
+
+// Backend'den veri yükleme fallback
+async function loadFromBackend() {
+  try {
+    // Backend'den restoranları al
+    const response = await fetch("http://localhost:5000/api/restaurants");
+    if (response.ok) {
+      const data = await response.json();
+      restaurantData = data.data || [];
+      console.log("✅ Loaded restaurants from backend:", restaurantData.length);
+
+      // Şehir-İlçe yapısını oluştur
+      districtsData = {};
+      restaurantData.forEach((restaurant) => {
+        const city = restaurant.city || "İstanbul";
+        const district = restaurant.district || restaurant.location;
+
+        if (!districtsData[city]) {
+          districtsData[city] = [];
+        }
+
+        if (!districtsData[city].includes(district)) {
+          districtsData[city].push(district);
+        }
+      });
+
+      console.log("✅ Created city-district mapping:", districtsData);
+    } else {
+      // Son fallback: Hardcoded data
+      useHardcodedData();
+    }
+  } catch (error) {
+    console.error("Backend fallback failed:", error);
+    useHardcodedData();
+  }
+}
+
+// Hardcoded fallback data
+function useHardcodedData() {
+  console.log("Using hardcoded fallback data");
+  districtsData = {
+    İstanbul: ["Beşiktaş", "Kadıköy", "Ortaköy"],
+    Ankara: ["Çankaya", "Keçiören"],
+    İzmir: ["Konak", "Bornova"],
+  };
+  restaurantData = []; // Boş array
 }
 
 function populateCityOptions() {
@@ -80,12 +136,32 @@ function onDistrictChange() {
   findRestaurantsBtn.disabled = !districtSelect.value;
 }
 
-function findRestaurants() {
+async function findRestaurants() {
   const city = document.getElementById("citySelect").value;
   const district = document.getElementById("districtSelect").value;
 
   if (!city || !district) return;
 
+  // Backend'den filtrelenmiş veri çekmeyi dene
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/restaurants?city=${encodeURIComponent(
+        city
+      )}&district=${encodeURIComponent(district)}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      displayRestaurants(data.data || [], city, district);
+      console.log(
+        `✅ Loaded ${data.count} restaurants for ${city}/${district} from backend`
+      );
+      return;
+    }
+  } catch (error) {
+    console.warn("⚠️ Backend filter failed, using local data:", error);
+  }
+
+  // Fallback: Local filtreleme
   const filtered = restaurantData.filter(
     (rest) => rest.city === city && rest.district === district
   );
