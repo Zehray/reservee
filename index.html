@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReserVee - Welcome to Our Café</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/src/assets/scss/main.scss" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">
+          <h2 class="mb-0">ReserVee</h2>
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="reservation.html">Reservations</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="admin.html">Admin</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="tools.html">Tools</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="home-page">
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Welcome to ReserVee Café</h1>
+          <p class="hero-description">
+            Experience the perfect blend of exceptional coffee, delicious
+            pastries, and warm hospitality in our cozy cafés. Find your nearest
+            location and book your table today.
+          </p>
+
+          <div class="location-selector">
+            <div class="location-form">
+              <div class="form-group">
+                <label for="citySelect">Select City</label>
+                <select id="citySelect">
+                  <option value="">Choose a city</option>
+                  <option value="istanbul">Istanbul</option>
+                  <option value="ankara">Ankara</option>
+                  <option value="izmir">Izmir</option>
+                  <option value="bursa">Bursa</option>
+                  <option value="antalya">Antalya</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="districtSelect">Select District</label>
+                <select id="districtSelect" disabled>
+                  <option value="">First select a city</option>
+                </select>
+              </div>
+
+              <button id="findRestaurants" class="cta-button" disabled>
+                Find Restaurants
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="restaurantResults" class="restaurant-results hidden">
+        <div class="container">
+          <h2 id="resultsTitle">Restaurants in Selected Area</h2>
+          <div id="restaurantGrid" class="restaurant-grid"></div>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="container">
+          <h2>Why Choose ReserVee?</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon">☕</div>
+              <h3>Premium Coffee</h3>
+              <p>
+                Freshly roasted beans from the finest coffee regions around the
+                world.
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🥐</div>
+              <h3>Fresh Pastries</h3>
+              <p>
+                Daily baked pastries and treats made with love and quality
+                ingredients.
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🏠</div>
+              <h3>Cozy Atmosphere</h3>
+              <p>
+                A warm and welcoming space perfect for meetings, dates, or quiet
+                moments.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2024 ReserVee Café. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <script type="module" src="/src/assets/js/main.js"></script>
+    <script type="module" src="/src/assets/js/home.js"></script>
+  </body>
+</html>
