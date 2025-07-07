@@ -1,122 +1,143 @@
 // API Service for ReserVee Backend Integration
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+var API_BASE_URL = "http://localhost:5000/api";
 
-async function apiRequest(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
+// Safari uyumlu API request function
+function apiRequest(endpoint, options) {
+  options = options || {};
+  var url = API_BASE_URL + endpoint;
 
-  const config = {
+  var config = {
     headers: {
       "Content-Type": "application/json",
-      ...options.headers,
     },
-    ...options,
   };
 
-  try {
-    const response = await fetch(url, config);
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || `HTTP error! status: ${response.status}`);
+  // Safari uyumlu object assign
+  if (options.headers) {
+    for (var key in options.headers) {
+      config.headers[key] = options.headers[key];
     }
-
-    return data;
-  } catch (error) {
-    console.error(`API Error (${endpoint}):`, error);
-    throw error;
   }
+
+  for (var key in options) {
+    if (key !== "headers") {
+      config[key] = options[key];
+    }
+  }
+
+  return fetch(url, config)
+    .then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) {
+          throw new Error(
+            data.error || "HTTP error! status: " + response.status
+          );
+        }
+        return data;
+      });
+    })
+    .catch(function (error) {
+      console.error("API Error (" + endpoint + "):", error);
+      throw error;
+    });
 }
 
-export const reservationAPI = {
-  getAll: async (filters = {}) => {
-    const queryParams = new URLSearchParams();
+var reservationAPI = {
+  getAll: function (filters) {
+    filters = filters || {};
+    var queryParams = [];
 
-    if (filters.date) queryParams.append("date", filters.date);
+    if (filters.date)
+      queryParams.push("date=" + encodeURIComponent(filters.date));
     if (filters.restaurantId)
-      queryParams.append("restaurantId", filters.restaurantId);
-    if (filters.status) queryParams.append("status", filters.status);
+      queryParams.push(
+        "restaurantId=" + encodeURIComponent(filters.restaurantId)
+      );
+    if (filters.status)
+      queryParams.push("status=" + encodeURIComponent(filters.status));
 
-    const endpoint = `/reservations${
-      queryParams.toString() ? `?${queryParams}` : ""
-    }`;
-    return await apiRequest(endpoint);
+    var endpoint =
+      "/reservations" + (queryParams.length ? "?" + queryParams.join("&") : "");
+    return apiRequest(endpoint);
   },
 
-  getById: async (id) => {
-    return await apiRequest(`/reservations/${id}`);
+  getById: function (id) {
+    return apiRequest("/reservations/" + id);
   },
 
-  create: async (reservationData) => {
-    return await apiRequest("/reservations", {
+  create: function (reservationData) {
+    return apiRequest("/reservations", {
       method: "POST",
       body: JSON.stringify(reservationData),
     });
   },
 
-  update: async (id, reservationData) => {
-    return await apiRequest(`/reservations/${id}`, {
+  update: function (id, reservationData) {
+    return apiRequest("/reservations/" + id, {
       method: "PUT",
       body: JSON.stringify(reservationData),
     });
   },
 
-  delete: async (id) => {
-    return await apiRequest(`/reservations/${id}`, {
+  delete: function (id) {
+    return apiRequest("/reservations/" + id, {
       method: "DELETE",
     });
   },
 
-  deleteAll: async () => {
-    return await apiRequest("/reservations", {
+  deleteAll: function () {
+    return apiRequest("/reservations", {
       method: "DELETE",
     });
   },
 };
 
-export const restaurantAPI = {
-  getAll: async (filters = {}) => {
-    const queryParams = new URLSearchParams();
+var restaurantAPI = {
+  getAll: function (filters) {
+    filters = filters || {};
+    var queryParams = [];
 
-    if (filters.location) queryParams.append("location", filters.location);
-    if (filters.cuisine) queryParams.append("cuisine", filters.cuisine);
+    if (filters.location)
+      queryParams.push("location=" + encodeURIComponent(filters.location));
+    if (filters.cuisine)
+      queryParams.push("cuisine=" + encodeURIComponent(filters.cuisine));
     if (filters.priceRange)
-      queryParams.append("priceRange", filters.priceRange);
+      queryParams.push("priceRange=" + encodeURIComponent(filters.priceRange));
 
-    const endpoint = `/restaurants${
-      queryParams.toString() ? `?${queryParams}` : ""
-    }`;
-    return await apiRequest(endpoint);
+    var endpoint =
+      "/restaurants" + (queryParams.length ? "?" + queryParams.join("&") : "");
+    return apiRequest(endpoint);
   },
 
-  getById: async (id) => {
-    return await apiRequest(`/restaurants/${id}`);
+  getById: function (id) {
+    return apiRequest("/restaurants/" + id);
   },
 
-  getReservations: async (id) => {
-    return await apiRequest(`/restaurants/${id}/reservations`);
+  getReservations: function (id) {
+    return apiRequest("/restaurants/" + id + "/reservations");
   },
 
-  getLocations: async () => {
-    return await apiRequest("/restaurants/meta/locations");
+  getLocations: function () {
+    return apiRequest("/restaurants/meta/locations");
   },
 
-  getCuisines: async () => {
-    return await apiRequest("/restaurants/meta/cuisines");
-  },
-};
-
-export const healthAPI = {
-  check: async () => {
-    return await apiRequest("/health");
+  getCuisines: function () {
+    return apiRequest("/restaurants/meta/cuisines");
   },
 };
 
-export const handleAPIError = (error, context = "") => {
-  console.error(`API Error ${context}:`, error);
+var healthAPI = {
+  check: function () {
+    return apiRequest("/health");
+  },
+};
 
-  const errorMessages = {
+function handleAPIError(error, context) {
+  context = context || "";
+  console.error("API Error " + context + ":", error);
+
+  var errorMessages = {
     "Failed to fetch":
       "Sunucuya bağlanılamıyor. İnternet bağlantınızı kontrol edin.",
     "Reservation not found": "Rezervasyon bulunamadı.",
@@ -128,34 +149,43 @@ export const handleAPIError = (error, context = "") => {
     "Missing required fields": "Zorunlu alanlar eksik.",
   };
 
-  const userMessage =
+  var userMessage =
     errorMessages[error.message] || "Bir hata oluştu. Lütfen tekrar deneyin.";
 
   return {
     originalError: error,
-    userMessage,
+    userMessage: userMessage,
     shouldRetry: error.message === "Failed to fetch",
   };
-};
+}
 
-export const testConnection = async () => {
-  try {
-    const result = await healthAPI.check();
-    console.log("✅ Backend connection successful:", result);
-    return true;
-  } catch (error) {
-    console.error("❌ Backend connection failed:", error);
-    return false;
-  }
-};
+function testConnection() {
+  return healthAPI
+    .check()
+    .then(function (result) {
+      console.log("✅ Backend connection successful:", result);
+      return true;
+    })
+    .catch(function (error) {
+      console.error("❌ Backend connection failed:", error);
+      return false;
+    });
+}
 
-export const withFallback = async (apiCall, fallbackCall) => {
-  try {
-    return await apiCall();
-  } catch (error) {
+function withFallback(apiCall, fallbackCall) {
+  return apiCall().catch(function (error) {
     console.warn("API call failed, falling back to localStorage:", error);
-    return await fallbackCall();
-  }
-};
+    return fallbackCall();
+  });
+}
 
-export { API_BASE_URL };
+// Export for ES6 modules
+export {
+  reservationAPI,
+  restaurantAPI,
+  healthAPI,
+  handleAPIError,
+  testConnection,
+  withFallback,
+  API_BASE_URL,
+};

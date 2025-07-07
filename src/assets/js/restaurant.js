@@ -1,9 +1,11 @@
 import { storage, formatDate, formatTime } from "./utils.js";
+import { restaurantAPI, handleAPIError } from "./api.js";
 
 let restaurantId;
 let restaurant;
 
-const restaurantData = {
+// Fallback data for offline mode
+const fallbackRestaurantData = {
   rest_1: {
     id: "rest_1",
     name: "ReserVee Beşiktaş",
@@ -198,34 +200,233 @@ const restaurantData = {
       },
     ],
   },
+  rest_4: {
+    id: "rest_4",
+    name: "Ankara Kafe",
+    image: "https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg",
+    rating: 4.3,
+    cuisine: "Turkish Cuisine",
+    address: "Kızılay Meydanı No:12, Çankaya, Ankara",
+    phone: "+90 312 555 0301",
+    email: "cankaya@ankarakafe.com",
+    priceRange: "Moderate (₺20-35 per person)",
+    priceSymbol: "₺₺",
+    features: ["WiFi", "Meeting Rooms", "Parking", "Air Conditioning"],
+    description:
+      "Modern Turkish cuisine in the heart of Ankara. Perfect for business lunches and family dinners.",
+    openingHours: {
+      weekdays: "9:00 AM - 11:00 PM",
+      weekends: "10:00 AM - 12:00 AM",
+    },
+    menuItems: [
+      {
+        name: "Döner Kebab",
+        price: "₺28",
+        image:
+          "https://images.pexels.com/photos/324028/pexels-photo-324028.jpeg",
+      },
+      {
+        name: "Pide",
+        price: "₺22",
+        image:
+          "https://images.pexels.com/photos/1126728/pexels-photo-1126728.jpeg",
+      },
+    ],
+    reviews: [
+      {
+        name: "Mehmet A.",
+        rating: 4,
+        comment: "Great Turkish food and friendly service.",
+        date: "2024-01-16",
+      },
+    ],
+  },
+  rest_5: {
+    id: "rest_5",
+    name: "İzmir Balık Evi",
+    image: "https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg",
+    rating: 4.6,
+    cuisine: "Seafood",
+    address: "Kordon Boyu No:25, Konak, İzmir",
+    phone: "+90 232 555 0401",
+    email: "konak@izmirbalik.com",
+    priceRange: "Upscale (₺40-60 per person)",
+    priceSymbol: "₺₺₺",
+    features: ["Sea View", "Fresh Seafood", "Wine Selection", "Terrace"],
+    description:
+      "Fresh seafood with stunning Aegean Sea views. The best fish restaurant in İzmir.",
+    openingHours: {
+      weekdays: "12:00 PM - 11:00 PM",
+      weekends: "11:00 AM - 12:00 AM",
+    },
+    menuItems: [
+      {
+        name: "Grilled Sea Bass",
+        price: "₺55",
+        image:
+          "https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg",
+      },
+      {
+        name: "Seafood Meze",
+        price: "₺35",
+        image:
+          "https://images.pexels.com/photos/1126728/pexels-photo-1126728.jpeg",
+      },
+    ],
+    reviews: [
+      {
+        name: "Ayşe T.",
+        rating: 5,
+        comment: "Amazing fresh fish and beautiful sea view!",
+        date: "2024-01-18",
+      },
+    ],
+  },
+  rest_6: {
+    id: "rest_6",
+    name: "Antalya Beach Cafe",
+    image: "https://images.pexels.com/photos/1307698/pexels-photo-1307698.jpeg",
+    rating: 4.4,
+    cuisine: "Mediterranean",
+    address: "Lara Plajı No:8, Muratpaşa, Antalya",
+    phone: "+90 242 555 0501",
+    email: "lara@antalyabeach.com",
+    priceRange: "Moderate (₺25-40 per person)",
+    priceSymbol: "₺₺",
+    features: ["Beach Access", "Pool", "Live Music", "Sunset View"],
+    description:
+      "Mediterranean cuisine with direct beach access. Perfect for vacation dining.",
+    openingHours: {
+      weekdays: "8:00 AM - 12:00 AM",
+      weekends: "8:00 AM - 1:00 AM",
+    },
+    menuItems: [
+      {
+        name: "Mediterranean Salad",
+        price: "₺24",
+        image:
+          "https://images.pexels.com/photos/324028/pexels-photo-324028.jpeg",
+      },
+      {
+        name: "Grilled Octopus",
+        price: "₺42",
+        image:
+          "https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg",
+      },
+    ],
+    reviews: [
+      {
+        name: "Can S.",
+        rating: 4,
+        comment: "Great location right on the beach. Food is good too!",
+        date: "2024-01-19",
+      },
+    ],
+  },
 };
 
+// Safari uyumlu URL parameter okuma
 function getRestaurantIdFromUrl() {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get("id");
+  var search = window.location.search;
+  if (!search) return null;
+
+  var params = search.substring(1).split("&");
+  for (var i = 0; i < params.length; i++) {
+    var param = params[i].split("=");
+    if (param[0] === "id") {
+      return decodeURIComponent(param[1]);
+    }
+  }
+  return null;
+}
+
+// Backend'den restoran verisi çek
+function fetchRestaurantData(id) {
+  return restaurantAPI
+    .getById(id)
+    .then(function (response) {
+      if (response.success && response.data) {
+        return response.data;
+      }
+      throw new Error("Restaurant not found in API response");
+    })
+    .catch(function (error) {
+      // Backend başarısız olursa fallback data kullan
+      return fallbackRestaurantData[id] || null;
+    });
 }
 
 function initRestaurantPage() {
   restaurantId = getRestaurantIdFromUrl();
 
-  if (!restaurantId || !restaurantData[restaurantId]) {
-    showRestaurantNotFound();
+  if (!restaurantId) {
+    showRestaurantNotFound("No restaurant ID provided");
     return;
   }
 
-  restaurant = restaurantData[restaurantId];
-  loadRestaurantData();
-  attachEventListeners();
+  // Loading state göster
+  showLoadingState();
+
+  // Backend'den veri çek
+  fetchRestaurantData(restaurantId)
+    .then(function (restaurantData) {
+      if (!restaurantData) {
+        showRestaurantNotFound("Restaurant not found");
+        return;
+      }
+
+      restaurant = restaurantData;
+      loadRestaurantData();
+      attachEventListeners();
+    })
+    .catch(function (error) {
+      console.error("Failed to load restaurant:", error);
+      showRestaurantNotFound("Failed to load restaurant data");
+    });
 }
 
-function showRestaurantNotFound() {
-  const container = document.querySelector(".restaurant-page .container");
+function showLoadingState() {
+  var container = document.querySelector(".restaurant-page .container");
+
+  if (container) {
+    // Mevcut içeriği gizle
+    var existingContent = container.children;
+    for (var i = 0; i < existingContent.length; i++) {
+      existingContent[i].style.display = "none";
+    }
+
+    // Loading overlay ekle
+    var loadingDiv = document.createElement("div");
+    loadingDiv.className = "loading-state";
+    loadingDiv.innerHTML = `
+      <div style="padding: 4rem 0; text-align: center;">
+        <div class="loading-spinner" style="margin: 0 auto 1rem; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <h3>Loading Restaurant...</h3>
+        <p>Please wait while we fetch the restaurant details.</p>
+      </div>
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    `;
+
+    container.appendChild(loadingDiv);
+  }
+}
+
+function showRestaurantNotFound(message) {
+  var container = document.querySelector(".restaurant-page .container");
   if (container) {
     container.innerHTML = `
       <div class="no-data" style="padding: 4rem 0; text-align: center;">
         <div class="no-data-icon">🏪</div>
         <h3>Restaurant Not Found</h3>
-        <p>The restaurant you're looking for doesn't exist or has been removed.</p>
+        <p>${
+          message ||
+          "The restaurant you are looking for does not exist or has been removed."
+        }</p>
         <a href="index.html" class="cta-button">Back to Home</a>
       </div>
     `;
@@ -233,7 +434,25 @@ function showRestaurantNotFound() {
 }
 
 function loadRestaurantData() {
-  if (!restaurant) return;
+  if (!restaurant) {
+    return;
+  }
+
+  // Loading state'i temizle ve asıl içeriği göster
+  const container = document.querySelector(".restaurant-page .container");
+  if (container) {
+    // Loading state'i kaldır
+    const loadingState = container.querySelector(".loading-state");
+    if (loadingState) {
+      loadingState.remove();
+    }
+
+    // Gizlenen içeriği tekrar göster
+    var existingContent = container.children;
+    for (var i = 0; i < existingContent.length; i++) {
+      existingContent[i].style.display = "";
+    }
+  }
 
   // Update page title
   document.title = `${restaurant.name} - ReserVee`;
