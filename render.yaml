@@ -4,6 +4,13 @@ services:
     env: static
     buildCommand: npm run build:render
     staticPublishPath: ./dist
+    headers:
+      - path: "*.css"
+        name: "Content-Type"
+        value: "text/css"
+      - path: "*.js"
+        name: "Content-Type"
+        value: "application/javascript"
     routes:
       - type: rewrite
         source: /*
