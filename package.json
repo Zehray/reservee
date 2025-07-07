@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "rm -rf node_modules/.vite && npm ci && vite build",
+    "build:render": "npm install --force && vite build",
     "preview": "vite preview",
     "backend:install": "cd backend && npm install",
     "backend:dev": "cd backend && npm run dev",
@@ -14,8 +15,11 @@
     "full:install": "npm install && npm run backend:install"
   },
   "devDependencies": {
-    "vite": "^5.4.2",
+    "vite": "^5.4.19",
     "sass": "^1.69.5",
     "concurrently": "^8.2.2"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.0.0"
   }
 }
