@@ -1,0 +1,15 @@
+import"./main-B6YXdTMh.js";import{s as l,f as B,a as E}from"./utils-BuTwOXtE.js";import{r as v,h as p}from"./api-ZOE00wgz.js";let n=[],o=[],h="date",s,r,d,i,c,f,y;async function A(){if(s=document.getElementById("reservationsTableBody"),r=document.getElementById("totalReservations"),d=document.getElementById("noReservations"),i=document.querySelector(".table-container"),c=document.getElementById("dateFilter"),f=document.getElementById("sortBy"),y=document.getElementById("clearAllData"),!s||!r||!d||!i||!c||!f||!y){console.error("Required admin dashboard elements not found");return}r&&(r.textContent="Loading..."),await u(),a(),L()}async function u(){try{n=(await v.getAll()).data||[],console.log("✅ Loaded reservations from backend:",n.length),l.set("reservations",n)}catch(e){console.warn("⚠️ Backend load failed, using localStorage fallback"),p(e,"loading reservations"),n=l.get("reservations")||[],console.warn("Loaded from localStorage:",n.length,"reservations")}o=[...n]}function L(){c.addEventListener("change",w),f.addEventListener("change",e=>{h=e.target.value,b(),a()}),y.addEventListener("click",S),setInterval(()=>{u(),g(),a()},3e4)}function w(){const e=c.value;e?o=n.filter(t=>t.date===e):o=[...n],b(),a()}function b(){o.sort((e,t)=>{switch(h){case"name":return e.fullName.localeCompare(t.fullName);case"guests":return parseInt(t.guests)-parseInt(e.guests);case"time":return e.time.localeCompare(t.time);case"date":default:const m=new Date(`${e.date}T${e.time}`),R=new Date(`${t.date}T${t.time}`);return m-R}})}function g(){w()}function a(){if($(),o.length===0){T();return}D(),I()}function $(){r.textContent=`Total: ${o.length}`}function T(){i.style.display="none",d.style.display="block"}function D(){i.style.display="block",d.style.display="none"}function I(){s.innerHTML="",o.forEach(e=>{const t=k(e);s.appendChild(t)})}function k(e){const t=document.createElement("tr");return t.innerHTML=`
+    <td>${e.fullName}</td>
+    <td>${e.phoneNumber}</td>
+    <td>${e.email}</td>
+    <td>${B(e.date)}</td>
+    <td>${E(e.time)}</td>
+    <td>${e.guests}</td>
+    <td>${e.specialRequests||"-"}</td>
+    <td>
+      <button class="delete-btn" onclick="deleteReservation('${e.id}')"
+              style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+        Delete
+      </button>
+    </td>
+  `,t}async function C(e){if(confirm("Are you sure you want to delete this reservation?")){try{await v.delete(e),console.log("✅ Reservation deleted from backend"),n=n.filter(t=>t.id!==e),l.set("reservations",n)}catch(t){console.warn("⚠️ Backend delete failed, deleting locally only"),p(t,"deleting reservation"),n=n.filter(m=>m.id!==e),l.set("reservations",n)}await u(),g(),a()}}function S(){confirm("Are you sure you want to delete ALL reservations? This action cannot be undone.")&&(l.remove("reservations"),u(),g(),a(),alert("All reservation data has been cleared."))}document.addEventListener("DOMContentLoaded",A);window.deleteReservation=C;

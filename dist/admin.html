@@ -2,23 +2,52 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/reservee/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ReserVee - Admin Dashboard</title>
-    <link rel="stylesheet" href="/reservee/assets/index-All4ik78.css" />
+    <script type="module" crossorigin src="/reservee/assets/admin-Cpyu5iOe.js"></script>
+    <link rel="modulepreload" crossorigin href="/reservee/assets/main-B6YXdTMh.js">
+    <link rel="modulepreload" crossorigin href="/reservee/assets/utils-BuTwOXtE.js">
+    <link rel="modulepreload" crossorigin href="/reservee/assets/api-ZOE00wgz.js">
+    <link rel="stylesheet" crossorigin href="/reservee/assets/main-BzUz7c_0.css">
   </head>
   <body>
-    <nav class="navbar">
-      <div class="nav-container">
-        <div class="nav-logo">
-          <h2>ReserVee</h2>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">
+          <h2 class="mb-0">ReserVee</h2>
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="reservation.html">Reservations</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="admin.html"
+                >Admin</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="tools.html">Tools</a>
+            </li>
+          </ul>
         </div>
-        <ul class="nav-menu">
-          <li><a href="index.html" class="nav-link">Home</a></li>
-          <li><a href="reservation.html" class="nav-link">Reservations</a></li>
-          <li><a href="admin.html" class="nav-link active">Admin</a></li>
-          <li><a href="tools.html" class="nav-link">Tools</a></li>
-        </ul>
       </div>
     </nav>
 
@@ -92,6 +121,5 @@
       </div>
     </footer>
 
-    <script type="module" src="/reservee/assets/index-oqU-VQ2N.js"></script>
   </body>
 </html>

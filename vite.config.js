@@ -8,6 +8,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: "index.html",
+        reservation: "reservation.html",
+        admin: "admin.html",
+        restaurant: "restaurant.html",
+        tools: "tools.html",
       },
     },
   },
